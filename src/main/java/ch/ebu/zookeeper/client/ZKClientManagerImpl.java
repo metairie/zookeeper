@@ -40,7 +40,7 @@ public class ZKClientManagerImpl implements ZKManager {
     private void initialize() {
         try {
             zkConnection = new ZKConnection();
-            zkeeper = zkConnection.connect("109.74.206.103");
+            zkeeper = zkConnection.connect("10.85.240.6");
 
         } catch (Exception e) {
             System.out.println(e.getMessage());
