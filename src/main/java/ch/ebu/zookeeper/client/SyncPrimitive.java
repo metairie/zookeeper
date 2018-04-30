@@ -18,6 +18,14 @@ public class SyncPrimitive implements Watcher {
 
     String root;
 
+    public static void main(String args[]) {
+        if (args[0].equals("qTest"))
+            queueTest(args);
+        else
+            barrierTest(args);
+
+    }
+
     SyncPrimitive(String address) {
         if (zk == null) {
             try {
@@ -228,16 +236,8 @@ public class SyncPrimitive implements Watcher {
         }
     }
 
-    public static void main(String args[]) {
-        if (args[0].equals("qTest"))
-            queueTest(args);
-        else
-            barrierTest(args);
-
-    }
-
     public static void queueTest(String args[]) {
-        Queue q = new Queue(args[1], "/app1");
+        Queue q = new Queue(args[1], "/Node1");
 
         System.out.println("Input: " + args[1]);
         int i;

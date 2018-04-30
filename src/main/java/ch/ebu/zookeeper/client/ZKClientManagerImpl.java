@@ -40,8 +40,7 @@ public class ZKClientManagerImpl implements ZKManager {
     private void initialize() {
         try {
             zkConnection = new ZKConnection();
-            zkeeper = zkConnection.connect("10.85.240.6");
-
+            zkeeper = zkConnection.connect("109.74.206.103");
         } catch (Exception e) {
             System.out.println(e.getMessage());
         }
@@ -58,31 +57,23 @@ public class ZKClientManagerImpl implements ZKManager {
         }
     }
 
-    public void create(String path, byte[] data) throws KeeperException,
-            InterruptedException {
-        zkeeper.create(path, data, ZooDefs.Ids.OPEN_ACL_UNSAFE,
-                CreateMode.PERSISTENT);
+    public void create(String path, byte[] data) throws KeeperException, InterruptedException {
+        zkeeper.create(path, data, ZooDefs.Ids.OPEN_ACL_UNSAFE, CreateMode.PERSISTENT);
 
     }
 
-    public Stat getZNodeStats(String path) throws KeeperException,
-            InterruptedException {
+    public Stat getZNodeStats(String path) throws KeeperException, InterruptedException {
         Stat stat = zkeeper.exists(path, true);
         if (stat != null) {
-            System.out.println("Node exists and the node version is "
-                    + stat.getVersion());
+            System.out.println("Node exists and the node version is " + stat.getVersion());
         } else {
             System.out.println("Node does not exists");
         }
         return stat;
     }
 
-    public Object getZNodeData(String path, boolean watchFlag) throws KeeperException,
-            InterruptedException {
-
-
+    public Object getZNodeData(String path, boolean watchFlag) throws KeeperException, InterruptedException {
         try {
-
             Stat stat = getZNodeStats(path);
             byte[] b = null;
             if (stat != null) {
@@ -121,7 +112,6 @@ public class ZKClientManagerImpl implements ZKManager {
 
                 String data = new String(b, "UTF-8");
                 System.out.println(data);
-
                 return data;
             } else {
                 System.out.println("Node does not exists");
@@ -132,15 +122,12 @@ public class ZKClientManagerImpl implements ZKManager {
         return null;
     }
 
-    public void update(String path, byte[] data) throws KeeperException,
-            InterruptedException {
+    public void update(String path, byte[] data) throws KeeperException, InterruptedException {
         int version = zkeeper.exists(path, true).getVersion();
         zkeeper.setData(path, data, version);
-
     }
 
-    public List<String> getZNodeChildren(String path) throws KeeperException,
-            InterruptedException {
+    public List<String> getZNodeChildren(String path) throws KeeperException, InterruptedException {
         Stat stat = getZNodeStats(path);
         List<String> children = null;
 
@@ -155,11 +142,9 @@ public class ZKClientManagerImpl implements ZKManager {
         return children;
     }
 
-    public void delete(String path) throws KeeperException,
-            InterruptedException {
+    public void delete(String path) throws KeeperException, InterruptedException {
         int version = zkeeper.exists(path, true).getVersion();
         zkeeper.delete(path, version);
-
     }
 
     /**

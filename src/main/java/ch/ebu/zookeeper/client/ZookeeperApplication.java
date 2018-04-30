@@ -14,7 +14,10 @@ public class ZookeeperApplication implements CommandLineRunner {
     public void run(String... args) throws Exception {
         ZKClientManagerImpl zkmanager = new ZKClientManagerImpl();
 
+        // get Node1
         String data = (String) zkmanager.getZNodeData("/Node1", false);
-        System.out.println(data);
+        System.out.println("Value =" + data);
+
+        //
     }
 }

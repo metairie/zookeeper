@@ -28,8 +28,7 @@ public interface ZKManager {
      * @throws KeeperException
      * @throws InterruptedException
      */
-    void create(String path, byte[] data) throws KeeperException,
-            InterruptedException;
+    void create(String path, byte[] data) throws KeeperException, InterruptedException;
 
     /**
      * Get the ZNode Stats
@@ -39,8 +38,7 @@ public interface ZKManager {
      * @throws KeeperException
      * @throws InterruptedException
      */
-    Stat getZNodeStats(String path) throws KeeperException,
-            InterruptedException;
+    Stat getZNodeStats(String path) throws KeeperException, InterruptedException;
 
     /**
      * Get ZNode Data
@@ -50,8 +48,7 @@ public interface ZKManager {
      * @throws KeeperException
      * @throws InterruptedException
      */
-    Object getZNodeData(String path, boolean watchFlag) throws KeeperException,
-            InterruptedException;
+    Object getZNodeData(String path, boolean watchFlag) throws KeeperException, InterruptedException;
 
     /**
      * Update the ZNode Data
@@ -61,8 +58,7 @@ public interface ZKManager {
      * @throws KeeperException
      * @throws InterruptedException
      */
-    void update(String path, byte[] data) throws KeeperException,
-            InterruptedException;
+    void update(String path, byte[] data) throws KeeperException, InterruptedException;
 
     /**
      * Get ZNode children
@@ -71,8 +67,7 @@ public interface ZKManager {
      * @throws KeeperException
      * @throws InterruptedException return List<String>
      */
-    List<String> getZNodeChildren(String path) throws KeeperException,
-            InterruptedException;
+    List<String> getZNodeChildren(String path) throws KeeperException, InterruptedException;
 
     /**
      * Delete the znode
@@ -81,6 +76,5 @@ public interface ZKManager {
      * @throws KeeperException
      * @throws InterruptedException
      */
-    void delete(String path) throws KeeperException,
-            InterruptedException;
+    void delete(String path) throws KeeperException, InterruptedException;
 }

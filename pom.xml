@@ -44,20 +44,11 @@
             <artifactId>zookeeper</artifactId>
             <version>3.4.11</version>
         </dependency>
-        <!-- https://mvnrepository.com/artifact/junit/junit -->
-        <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-            <version>4.12</version>
-            <scope>test</scope>
-        </dependency>
-
 
     </dependencies>
 
     <build>
         <plugins>
-
             <!-- The Spring Boot Maven Plugin provides Spring Boot support in Maven,
             allowing you to package executable jar or war archives and run an application “in-place”. -->
             <plugin>
