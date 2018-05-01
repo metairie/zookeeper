@@ -1,4 +1,4 @@
-package ch.ebu.zookeeper.draft;
+package ch.ebu.zookeeper.deprecated.draft;
 
 import ch.ebu.zookeeper.fwk.CountdownWatcher;
 import org.apache.zookeeper.KeeperException;

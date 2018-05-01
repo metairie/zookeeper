@@ -1,4 +1,4 @@
-package ch.ebu.zookeeper.draft;
+package ch.ebu.zookeeper.deprecated.draft;
 
 import org.apache.zookeeper.*;
 import org.apache.zookeeper.data.ACL;
