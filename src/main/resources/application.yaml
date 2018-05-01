@@ -1,0 +1,13 @@
+# default config
+
+zookeeper:
+  url: 109.74.206.103:2181
+  root-node: /zoo
+
+server:
+  port: 8280
+  servlet.context-path: /zoo
+
+spring:
+  application:
+    name: ZooKeeper

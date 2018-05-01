@@ -4,7 +4,7 @@
  * Globinch.com
  * copyright https://www.java.globinch.com. All rights reserved.
  */
-package ch.ebu.zookeeper.client;
+package ch.ebu.zookeeper.deprecated;
 
 import org.apache.zookeeper.KeeperException;
 import org.apache.zookeeper.data.Stat;

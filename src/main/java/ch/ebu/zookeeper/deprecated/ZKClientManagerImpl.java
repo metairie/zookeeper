@@ -4,8 +4,10 @@
  * Globinch.com
  * copyright https://www.java.globinch.com. All rights reserved.
  */
-package ch.ebu.zookeeper.client;
+package ch.ebu.zookeeper.deprecated;
 
+import ch.ebu.zookeeper.configuration.ZKConnection;
+import ch.ebu.zookeeper.fwk.ZKWatcher;
 import org.apache.zookeeper.CreateMode;
 import org.apache.zookeeper.KeeperException;
 import org.apache.zookeeper.ZooDefs;

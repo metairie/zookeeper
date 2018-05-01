@@ -1,6 +1,6 @@
-package ch.ebu.zookeeper.client.test;
+package ch.ebu.zookeeper.deprecated.client.test;
 
-import ch.ebu.zookeeper.client.ZKClientManagerImpl;
+import ch.ebu.zookeeper.deprecated.ZKClientManagerImpl;
 import org.apache.zookeeper.KeeperException;
 import org.apache.zookeeper.data.Stat;
 import org.junit.After;
@@ -45,7 +45,7 @@ public class ZKClientTest {
 
     /**
      * Test method for
-     * {@link ch.ebu.zookeeper.client.ZKClientManagerImpl#create(java.lang.String, byte[])}
+     * {@link ZKClientManagerImpl#create(java.lang.String, byte[])}
      * .
      *
      * @throws InterruptedException
@@ -63,7 +63,7 @@ public class ZKClientTest {
 
     /**
      * Test method for
-     * {@link ch.ebu.zookeeper.client.ZKClientManagerImpl#getZNodeStats(java.lang.String)}
+     * {@link ZKClientManagerImpl#getZNodeStats(java.lang.String)}
      * .
      *
      * @throws InterruptedException
@@ -82,7 +82,7 @@ public class ZKClientTest {
 
     /**
      * Test method for
-     * {@link ch.ebu.zookeeper.client.ZKClientManagerImpl getZNodeData(java.lang.String)}
+     * {@link ZKClientManagerImpl getZNodeData(java.lang.String)}
      * .
      *
      * @throws InterruptedException
@@ -98,7 +98,7 @@ public class ZKClientTest {
 
     /**
      * Test method for
-     * {@link ch.ebu.zookeeper.client.ZKClientManagerImpl#update(java.lang.String, byte[])}
+     * {@link ZKClientManagerImpl#update(java.lang.String, byte[])}
      * .
      *
      * @throws InterruptedException
@@ -117,7 +117,7 @@ public class ZKClientTest {
 
     /**
      * Test method for
-     * {@link ch.ebu.zookeeper.client.ZKClientManagerImpl#getZNodeChildren(java.lang.String)}
+     * {@link ZKClientManagerImpl#getZNodeChildren(java.lang.String)}
      * .
      *
      * @throws InterruptedException
@@ -133,7 +133,7 @@ public class ZKClientTest {
 
     /**
      * Test method for
-     * {@link ch.ebu.zookeeper.client.ZKClientManagerImpl#delete(java.lang.String)}
+     * {@link ZKClientManagerImpl#delete(java.lang.String)}
      * .
      *
      * @throws InterruptedException

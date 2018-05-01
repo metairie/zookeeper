@@ -1,5 +1,6 @@
-package ch.ebu.zookeeper.client;
+package ch.ebu.zookeeper;
 
+import ch.ebu.zookeeper.deprecated.ZKClientManagerImpl;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -16,8 +17,10 @@ public class ZookeeperApplication implements CommandLineRunner {
 
         // get Node1
         String data = (String) zkmanager.getZNodeData("/Node1", false);
+
+        byte[] d = "test".getBytes();
+        zkmanager.create( "/Node1", d);
         System.out.println("Value =" + data);
 
-        //
     }
 }

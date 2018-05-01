@@ -1,4 +1,4 @@
-package ch.ebu.zookeeper.client;
+package ch.ebu.zookeeper.deprecated.client;
 
 import org.apache.zookeeper.*;
 import org.apache.zookeeper.ZooDefs.Ids;

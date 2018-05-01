@@ -1,4 +1,4 @@
-package ch.ebu.zookeeper.executor;
+package ch.ebu.zookeeper.deprecated.executor;
 
 /**
  * A simple class that monitors the data and existence of a ZooKeeper

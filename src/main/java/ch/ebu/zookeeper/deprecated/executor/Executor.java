@@ -1,4 +1,4 @@
-package ch.ebu.zookeeper.executor;
+package ch.ebu.zookeeper.deprecated.executor;
 
 import org.apache.zookeeper.KeeperException;
 import org.apache.zookeeper.WatchedEvent;

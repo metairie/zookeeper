@@ -1,4 +1,4 @@
-package ch.ebu.zookeeper.client;
+package ch.ebu.zookeeper.fwk;
 
 import org.apache.zookeeper.AsyncCallback.StatCallback;
 import org.apache.zookeeper.WatchedEvent;
@@ -10,21 +10,19 @@ import java.util.concurrent.CountDownLatch;
 public class ZKWatcher implements Watcher, StatCallback {
     CountDownLatch latch;
 
-    ZKWatcher() {
+    public ZKWatcher() {
         latch = new CountDownLatch(1);
     }
 
     public void processResult(int rc, String path, Object ctx, Stat stat) {
-        // TODO Auto-generated method stub
     }
-
 
     public void process(WatchedEvent event) {
         System.out.println("Watcher fired on path: " + event.getPath() + " state: " + event.getState() + " type " + event.getType());
         latch.countDown();
     }
 
-    void await() throws InterruptedException {
+    public void await() throws InterruptedException {
         latch.await();
     }
 
