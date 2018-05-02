@@ -3,6 +3,7 @@
 zookeeper:
   url: 109.74.206.103:2181
   root-node: /zoo
+  timeout: 3000 #ms
 
 server:
   port: 8280
