@@ -2,6 +2,7 @@ package ch.ebu.zookeeper.repository;
 
 import ch.ebu.zookeeper.configuration.ZookeeperProperties;
 import ch.ebu.zookeeper.fwk.ZKWatcher;
+import ch.ebu.zookeeper.service.ZookeeperService;
 import org.apache.zookeeper.CreateMode;
 import org.apache.zookeeper.KeeperException;
 import org.apache.zookeeper.ZooDefs;
@@ -15,21 +16,17 @@ import org.springframework.stereotype.Repository;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.util.List;
-import java.util.concurrent.CountDownLatch;
 
 @Repository
 public class ZookeeperRepository {
 
     private static final Logger LOG = LoggerFactory.getLogger(ZookeeperRepository.class);
-    private final CountDownLatch connectionLatch = new CountDownLatch(1);
     private ZooKeeper zookeeper;
 
     @Autowired
     public ZookeeperRepository(ZookeeperProperties zookeeperProperties) throws IOException, InterruptedException {
-        zookeeper = new ZooKeeper(zookeeperProperties.getUrl(), zookeeperProperties.getTimeout(), watchedEvent -> {
-            connectionLatch.countDown();
-        });
-        connectionLatch.await();
+        ZookeeperService zookeeperService = new ZookeeperService(zookeeperProperties);
+        zookeeper = zookeeperService.getZooKeeper();
     }
 
     /**

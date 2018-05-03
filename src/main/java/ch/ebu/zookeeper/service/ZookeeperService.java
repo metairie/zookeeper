@@ -4,13 +4,11 @@ import ch.ebu.zookeeper.configuration.ZookeeperProperties;
 import ch.ebu.zookeeper.fwk.ZKMonitor;
 import ch.ebu.zookeeper.fwk.ZKMonitorListener;
 import ch.ebu.zookeeper.fwk.ZKWatcher;
-import org.apache.zookeeper.KeeperException;
 import org.apache.zookeeper.WatchedEvent;
 import org.apache.zookeeper.ZooKeeper;
 import org.apache.zookeeper.data.Stat;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
@@ -28,10 +26,13 @@ public class ZookeeperService extends ZKWatcher implements Runnable, ZKMonitorLi
     private ZKMonitor zkMonitor;
     private ZooKeeper zooKeeper;
 
-    @Autowired
-    public ZookeeperService(ZookeeperProperties zookeeperProperties) throws KeeperException, IOException {
-        zooKeeper = new ZooKeeper(zookeeperProperties.getUrl(), zookeeperProperties.getTimeout(), this);
-        zkMonitor = new ZKMonitor(zooKeeper, zookeeperProperties.getRootNode(), null, this);
+    public ZookeeperService(ZookeeperProperties zookeeperProperties) {
+        try {
+            zooKeeper = new ZooKeeper(zookeeperProperties.getUrl(), zookeeperProperties.getTimeout(), this);
+            zkMonitor = new ZKMonitor(zooKeeper, zookeeperProperties.getRootNode(), null, this);
+        } catch (IOException e) {
+            LOG.info("executor.run");
+        }
     }
 
     @Override
@@ -69,4 +70,9 @@ public class ZookeeperService extends ZKWatcher implements Runnable, ZKMonitorLi
     public void process(WatchedEvent event) {
         zkMonitor.process(event);
     }
+
+    public ZooKeeper getZooKeeper() {
+        return zooKeeper;
+    }
+
 }
