@@ -2,7 +2,10 @@ package ch.ebu.zookeeper.repository;
 
 import ch.ebu.zookeeper.configuration.ZookeeperProperties;
 import ch.ebu.zookeeper.fwk.ZKWatcher;
-import org.apache.zookeeper.*;
+import org.apache.zookeeper.CreateMode;
+import org.apache.zookeeper.KeeperException;
+import org.apache.zookeeper.ZooDefs;
+import org.apache.zookeeper.ZooKeeper;
 import org.apache.zookeeper.data.Stat;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -40,9 +43,8 @@ public class ZookeeperRepository {
             if (watchFlag) {
                 b = zookeeper.getData(path, new ZKWatcher() {
                     @Override
-                    public void process(WatchedEvent watchedEvent) {
-                        // TODO manage QUEUE here
-                        super.process(watchedEvent);
+                    public void processResult(int rc, String path, Object ctx, Stat stat) {
+                        LOG.info("process result ZK repo !");
                     }
                 }, null);
             } else {

@@ -16,21 +16,15 @@ import org.apache.zookeeper.data.Stat;
 import java.util.Arrays;
 
 public class DataMonitor implements Watcher, StatCallback {
-
     ZooKeeper zk;
-
     String znode;
-
     Watcher chainedWatcher;
-
     boolean dead;
-
     DataMonitorListener listener;
-
     byte prevData[];
 
-    public DataMonitor(ZooKeeper zk, String znode, Watcher chainedWatcher,
-                       DataMonitorListener listener) {
+    public DataMonitor(ZooKeeper zk, String znode, Watcher chainedWatcher, DataMonitorListener listener) {
+        System.out.println("constructor dm");
         this.zk = zk;
         this.znode = znode;
         this.chainedWatcher = chainedWatcher;
@@ -58,6 +52,7 @@ public class DataMonitor implements Watcher, StatCallback {
     }
 
     public void process(WatchedEvent event) {
+        System.out.println("dm.process");
         String path = event.getPath();
         if (event.getType() == Event.EventType.None) {
             // We are are being told that the state of the
@@ -78,6 +73,20 @@ public class DataMonitor implements Watcher, StatCallback {
         } else {
             if (path != null && path.equals(znode)) {
                 // Something has changed on the node, let's find out
+                /**
+                 * The asynchronous version of exists.
+                 *
+                 * Call
+                 *  exists(path, watch ? watchManager.defaultWatcher : null, cb, ctx);
+                 *
+                 * Return the data and the stat of the node of the given path.
+                 * If the watch is non-null and the call is successful (no exception is
+                 * thrown), a watch will be left on the node with the given path. The watch
+                 * will be triggered by a successful operation that sets data on the node, or
+                 * deletes the node.
+                 * A KeeperException with error code KeeperException.NoNode will be thrown
+                 * if no node with the given path exists.
+                 */
                 zk.exists(znode, true, this, null);
             }
         }
@@ -86,7 +95,11 @@ public class DataMonitor implements Watcher, StatCallback {
         }
     }
 
+    /**
+     * asynch call when zookeeper.exists() is invoked
+     **/
     public void processResult(int rc, String path, Object ctx, Stat stat) {
+        System.out.println("dm.processResult");
         boolean exists;
         switch (rc) {
             case Code.Ok:
@@ -118,8 +131,7 @@ public class DataMonitor implements Watcher, StatCallback {
                 return;
             }
         }
-        if ((b == null && b != prevData)
-                || (b != null && !Arrays.equals(prevData, b))) {
+        if ((b == null && b != prevData) || (b != null && !Arrays.equals(prevData, b))) {
             listener.exists(b);
             prevData = b;
         }

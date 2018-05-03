@@ -1,4 +1,4 @@
-package ch.ebu.zookeeper.fwk;
+package ch.ebu.zookeeper.deprecated.draft;
 
 import org.apache.zookeeper.WatchedEvent;
 import org.apache.zookeeper.Watcher;
