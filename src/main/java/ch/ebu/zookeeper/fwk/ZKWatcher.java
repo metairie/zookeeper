@@ -8,13 +8,14 @@ import org.apache.zookeeper.data.Stat;
 import java.util.concurrent.CountDownLatch;
 
 public class ZKWatcher implements Watcher, StatCallback {
-    CountDownLatch latch;
+    private CountDownLatch latch;
 
     public ZKWatcher() {
         latch = new CountDownLatch(1);
     }
 
     public void processResult(int rc, String path, Object ctx, Stat stat) {
+        System.out.println("process Result fired on (stat) " + stat);
     }
 
     public void process(WatchedEvent event) {
@@ -23,6 +24,7 @@ public class ZKWatcher implements Watcher, StatCallback {
     }
 
     public void await() throws InterruptedException {
+        System.out.println("Watcher fired await");
         latch.await();
     }
 

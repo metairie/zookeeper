@@ -13,4 +13,6 @@ public class ZookeeperProperties {
 
     private String rootNode;
 
+    private int timeout;
+
 }

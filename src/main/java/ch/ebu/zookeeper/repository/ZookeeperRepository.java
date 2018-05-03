@@ -4,46 +4,99 @@ import ch.ebu.zookeeper.configuration.ZookeeperProperties;
 import ch.ebu.zookeeper.fwk.ZKWatcher;
 import org.apache.zookeeper.*;
 import org.apache.zookeeper.data.Stat;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.util.List;
 import java.util.concurrent.CountDownLatch;
 
 @Repository
 public class ZookeeperRepository {
 
-    @Autowired
-    private final ZookeeperProperties zookeeperProperties;
-
+    private static final Logger LOG = LoggerFactory.getLogger(ZookeeperRepository.class);
     private final CountDownLatch connectionLatch = new CountDownLatch(1);
     private ZooKeeper zookeeper;
 
+    @Autowired
     public ZookeeperRepository(ZookeeperProperties zookeeperProperties) throws IOException, InterruptedException {
-        this.zookeeperProperties = zookeeperProperties;
-        zookeeper = new ZooKeeper(zookeeperProperties.getUrl(), 2000, new Watcher() {
-            public void process(WatchedEvent we) {
-                if (we.getState() == Event.KeeperState.SyncConnected) {
-                    connectionLatch.countDown();
-                }
-            }
+        zookeeper = new ZooKeeper(zookeeperProperties.getUrl(), zookeeperProperties.getTimeout(), watchedEvent -> {
+            connectionLatch.countDown();
         });
         connectionLatch.await();
     }
 
-    public void create(String path, byte[] data) throws KeeperException, InterruptedException {
-        zookeeper.create(path, data, ZooDefs.Ids.OPEN_ACL_UNSAFE, CreateMode.PERSISTENT);
+    /**
+     * @param path      url path
+     * @param watchFlag if we want to watch the value
+     * @return value
+     */
+    public String get(String path, boolean watchFlag) {
+        byte[] b;
+        try {
+            if (watchFlag) {
+                b = zookeeper.getData(path, new ZKWatcher() {
+                    @Override
+                    public void process(WatchedEvent watchedEvent) {
+                        // TODO manage QUEUE here
+                        super.process(watchedEvent);
+                    }
+                }, null);
+            } else {
+                b = zookeeper.getData(path, null, null);
+            }
+            return new String(b, "UTF-8");
+        } catch (UnsupportedEncodingException | KeeperException | InterruptedException e) {
+            LOG.error(e.getLocalizedMessage());
+        }
+        return "";
     }
 
-    public Stat getZNodeStats(String path) throws KeeperException, InterruptedException {
-        Stat stat = zookeeper.exists(path, true);
-        if (stat != null) {
-            System.out.println("Node exists and the node version is " + stat.getVersion());
-        } else {
-            System.out.println("Node does not exists");
+    /**
+     * Create a ZNode
+     *
+     * @param path       url path
+     * @param znodevalue request body {"znodevalue": "bla bla bla bla"}
+     */
+    public void create(String path, byte[] znodevalue) {
+        try {
+            Stat stat = getZNodeStats(path);
+            zookeeper.create(path, znodevalue, ZooDefs.Ids.OPEN_ACL_UNSAFE, CreateMode.PERSISTENT);
+        } catch (KeeperException | InterruptedException e) {
+            LOG.error(e.getLocalizedMessage());
         }
-        return stat;
+    }
+
+    /**
+     * update a ZNode
+     *
+     * @param path       url path
+     * @param znodevalue request body {"znodevalue": "bla bla bla bla"}
+     */
+    public void update(String path, byte[] znodevalue) {
+        try {
+            int version = zookeeper.exists(path, true).getVersion();
+            zookeeper.setData(path, znodevalue, version);
+        } catch (KeeperException | InterruptedException e) {
+            LOG.error(e.getLocalizedMessage());
+        }
+    }
+
+    /**
+     * delete a ZNode
+     *
+     * @param path url path
+     */
+    public void delete(String path) {
+        try {
+            int version = zookeeper.exists(path, true).getVersion();
+            zookeeper.delete(path, version);
+        } catch (KeeperException | InterruptedException e) {
+            LOG.error(e.getLocalizedMessage());
+        }
     }
 
     /**
@@ -53,35 +106,8 @@ public class ZookeeperRepository {
         try {
             zookeeper.close();
         } catch (InterruptedException e) {
-            System.out.println(e.getMessage());
+            LOG.error(e.getLocalizedMessage());
         }
-    }
-
-    public Object getZNodeData(String path, boolean watchFlag) throws KeeperException, InterruptedException {
-        try {
-            Stat stat = getZNodeStats(path);
-            byte[] b = null;
-            if (stat != null) {
-                if (watchFlag) {
-                    ZKWatcher watch = new ZKWatcher();
-                    b = zookeeper.getData(path, watch, null);
-                    watch.await();
-                } else {
-                    b = zookeeper.getData(path, null, null);
-                }
-                return new String(b, "UTF-8");
-            } else {
-                System.out.println("Node does not exists");
-            }
-        } catch (Exception e) {
-            System.out.println(e.getMessage());
-        }
-        return null;
-    }
-
-    public void update(String path, byte[] data) throws KeeperException, InterruptedException {
-        int version = zookeeper.exists(path, true).getVersion();
-        zookeeper.setData(path, data, version);
     }
 
     public List<String> getZNodeChildren(String path) throws KeeperException, InterruptedException {
@@ -90,17 +116,21 @@ public class ZookeeperRepository {
 
         if (stat != null) {
             children = zookeeper.getChildren(path, false);
-            for (int i = 0; i < children.size(); i++)
-                System.out.println(children.get(i));
-
+            for (String aChildren : children) System.out.println(aChildren);
         } else {
-            System.out.println("Node does not exists");
+            LOG.info("Node does not exist");
         }
         return children;
     }
 
-    public void delete(String path) throws KeeperException, InterruptedException {
-        int version = zookeeper.exists(path, true).getVersion();
-        zookeeper.delete(path, version);
+    private Stat getZNodeStats(String path) throws KeeperException, InterruptedException {
+        Stat stat = zookeeper.exists(path, true);
+        if (stat != null) {
+            LOG.info("Node exists and the node version is " + stat.getVersion());
+        } else {
+            LOG.info("Node does not exist");
+        }
+        return stat;
     }
+
 }
