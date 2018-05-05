@@ -2,8 +2,8 @@
 
 zookeeper:
   url: 109.74.206.103:2181
-  root-node: /zoo
-  timeout: 1000 #ms
+  root-node: /Node1
+  timeout: 10000 #ms
 
 server:
   port: 8280

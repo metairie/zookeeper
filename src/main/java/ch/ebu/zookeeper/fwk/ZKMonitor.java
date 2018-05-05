@@ -1,5 +1,6 @@
 package ch.ebu.zookeeper.fwk;
 
+import org.apache.zookeeper.AsyncCallback;
 import org.apache.zookeeper.KeeperException;
 import org.apache.zookeeper.WatchedEvent;
 import org.apache.zookeeper.ZooKeeper;
@@ -9,7 +10,7 @@ import org.slf4j.LoggerFactory;
 
 import java.util.Arrays;
 
-public class ZKMonitor extends ZKWatcher {
+public class ZKMonitor extends ZKWatcher implements AsyncCallback.StatCallback {
     private static final Logger LOG = LoggerFactory.getLogger(ZKMonitor.class);
     private ZooKeeper zk;
     private String znode;
@@ -28,6 +29,7 @@ public class ZKMonitor extends ZKWatcher {
 
     @Override
     public void process(WatchedEvent event) {
+        LOG.info("*********************** process *********************************");
         String path = event.getPath();
         if (event.getType() == Event.EventType.None) {
             switch (event.getState()) {
@@ -53,6 +55,7 @@ public class ZKMonitor extends ZKWatcher {
      **/
     @Override
     public void processResult(int rc, String path, Object ctx, Stat stat) {
+        LOG.info("*********************** processResult ********************************");
         boolean exists;
         switch (rc) {
             case KeeperException.Code.Ok:
@@ -73,18 +76,22 @@ public class ZKMonitor extends ZKWatcher {
         byte b[] = null;
         if (exists) {
             try {
+                LOG.info("*********************** try get data");
                 b = zk.getData(znode, false, null);
             } catch (InterruptedException | KeeperException e) {
                 return;
             }
         }
-        if ((b != null && (b != prevData || !Arrays.equals(prevData, b)))) {
+
+        if (((b != null && prevData != null) && (!Arrays.equals(prevData, b)))) {
+            LOG.info("*********************** listener.exists called ");
             listener.exists(b);
-            prevData = b;
         }
+        prevData = b;
     }
 
     public boolean isDead() {
         return dead;
     }
+
 }

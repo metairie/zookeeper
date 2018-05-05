@@ -1,6 +1,5 @@
 package ch.ebu.zookeeper.repository;
 
-import ch.ebu.zookeeper.configuration.ZookeeperProperties;
 import ch.ebu.zookeeper.fwk.ZKWatcher;
 import ch.ebu.zookeeper.service.ZookeeperService;
 import org.apache.zookeeper.CreateMode;
@@ -24,8 +23,8 @@ public class ZookeeperRepository {
     private ZooKeeper zookeeper;
 
     @Autowired
-    public ZookeeperRepository(ZookeeperProperties zookeeperProperties) throws IOException, InterruptedException {
-        ZookeeperService zookeeperService = new ZookeeperService(zookeeperProperties);
+    public ZookeeperRepository(ZookeeperService zookeeperService) throws IOException, InterruptedException {
+        LOG.info("******************************** constructor");
         zookeeper = zookeeperService.getZooKeeper();
     }
 
@@ -41,7 +40,7 @@ public class ZookeeperRepository {
                 b = zookeeper.getData(path, new ZKWatcher() {
                     @Override
                     public void processResult(int rc, String path, Object ctx, Stat stat) {
-                        LOG.info("process result ZK repo !");
+                        LOG.info("******************************** process result ZK repo !");
                     }
                 }, null);
             } else {
