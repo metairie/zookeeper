@@ -1,6 +1,8 @@
 package ch.ebu.zookeeper.web;
 
 import ch.ebu.zookeeper.repository.ZookeeperRepository;
+import ch.ebu.zookeeper.web.DTO.ZooBodyDTO;
+import ch.ebu.zookeeper.web.DTO.ZooResponseDTO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,19 +13,19 @@ import org.springframework.web.servlet.HandlerMapping;
 import javax.servlet.http.HttpServletRequest;
 
 @RestController
-@RequestMapping(value = "/{root}/**", consumes = MediaType.APPLICATION_JSON_UTF8_VALUE, produces = "application/json; application/xml")
-public class ZooWS {
+@RequestMapping(value = "/{rootNode}/**", consumes = MediaType.APPLICATION_JSON_UTF8_VALUE, produces = "application/json; application/xml")
+public class ZooZNodeWS {
 
-    private static final Logger LOG = LoggerFactory.getLogger(ZooWS.class);
+    private static final Logger LOG = LoggerFactory.getLogger(ZooZNodeWS.class);
     private final ZookeeperRepository zookeeperRepository;
 
     @Autowired
-    public ZooWS(ZookeeperRepository zookeeperRepository) {
+    public ZooZNodeWS(ZookeeperRepository zookeeperRepository) {
         this.zookeeperRepository = zookeeperRepository;
     }
 
     @GetMapping()
-    public ZooResponseDTO get(@PathVariable("root") String root, HttpServletRequest request) {
+    public ZooResponseDTO get(@PathVariable("rootNode") String rootNode, HttpServletRequest request) {
         String restOfTheUrl = (String) request.getAttribute(HandlerMapping.PATH_WITHIN_HANDLER_MAPPING_ATTRIBUTE);
         LOG.info("GET " + restOfTheUrl);
         String data = zookeeperRepository.get(restOfTheUrl, true);
@@ -33,7 +35,7 @@ public class ZooWS {
     }
 
     @PostMapping
-    public ZooResponseDTO post(@PathVariable("root") String root, HttpServletRequest request, @RequestBody ZooBodyDTO zooBodyDTO) {
+    public ZooResponseDTO post(@PathVariable("rootNode") String rootNode, HttpServletRequest request, @RequestBody ZooBodyDTO zooBodyDTO) {
         String restOfTheUrl = (String) request.getAttribute(HandlerMapping.PATH_WITHIN_HANDLER_MAPPING_ATTRIBUTE);
         LOG.info("POST " + restOfTheUrl);
         zookeeperRepository.create(restOfTheUrl, zooBodyDTO.getZnodevalue().getBytes());
@@ -43,7 +45,7 @@ public class ZooWS {
     }
 
     @PutMapping
-    public ZooResponseDTO put(@PathVariable("root") String root, HttpServletRequest request, @RequestBody ZooBodyDTO zooBodyDTO) {
+    public ZooResponseDTO put(@PathVariable("rootNode") String rootNode, HttpServletRequest request, @RequestBody ZooBodyDTO zooBodyDTO) {
         String restOfTheUrl = (String) request.getAttribute(HandlerMapping.PATH_WITHIN_HANDLER_MAPPING_ATTRIBUTE);
         LOG.info("PUT " + restOfTheUrl);
         zookeeperRepository.update(restOfTheUrl, zooBodyDTO.getZnodevalue().getBytes());
@@ -53,7 +55,7 @@ public class ZooWS {
     }
 
     @DeleteMapping
-    public ZooResponseDTO delete(@PathVariable("root") String root, HttpServletRequest request) {
+    public ZooResponseDTO delete(@PathVariable("rootNode") String rootNode, HttpServletRequest request) {
         String restOfTheUrl = (String) request.getAttribute(HandlerMapping.PATH_WITHIN_HANDLER_MAPPING_ATTRIBUTE);
         LOG.info("DEL " + restOfTheUrl);
         zookeeperRepository.delete(restOfTheUrl);

@@ -29,6 +29,26 @@ public class ZookeeperRepository {
     }
 
     /**
+     * register a Queue
+     *
+     * @param path url path
+     */
+    public void register(String path) {
+        LOG.info("register");
+        zookeeperService.register();
+    }
+
+    /**
+     * unregister a Queue
+     *
+     * @param path url path
+     */
+    public void unregister(String path) {
+        LOG.info("Unregister");
+        zookeeperService.unregister();
+    }
+
+    /**
      * @param path      url path
      * @param watchFlag if we want to watch the value
      * @return value
@@ -38,13 +58,6 @@ public class ZookeeperRepository {
         try {
             if (watchFlag) {
                 b = zookeeper.getData(path, this.zookeeperService, null);
-                /*                b = zookeeper.getData(path, new ZKWatcher() {
-                    @Override
-                    public void processResult(int rc, String path, Object ctx, Stat stat) {
-// TODO redo watch
-                    }
-                }, null);
-*/
             } else {
                 b = zookeeper.getData(path, null, null);
             }

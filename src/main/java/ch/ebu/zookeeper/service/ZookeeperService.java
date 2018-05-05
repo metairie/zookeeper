@@ -28,9 +28,11 @@ public class ZookeeperService extends ZKWatcher implements Runnable, ZKMonitorLi
     private static final Logger LOG = LoggerFactory.getLogger(ZookeeperService.class);
     private ZKMonitor zkMonitor;
     private ZooKeeper zooKeeper;
+    private ZookeeperProperties zookeeperProperties;
 
     @Autowired
     public ZookeeperService(ZookeeperProperties zookeeperProperties) {
+        this.zookeeperProperties = zookeeperProperties;
         this.init(zookeeperProperties);
     }
 
@@ -41,6 +43,14 @@ public class ZookeeperService extends ZKWatcher implements Runnable, ZKMonitorLi
         } catch (IOException e) {
             LOG.error(e.getLocalizedMessage());
         }
+    }
+
+    public void register() {
+        zkMonitor.enabled();
+    }
+
+    public void unregister() {
+        zkMonitor.disabled();
     }
 
     @Override

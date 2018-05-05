@@ -18,6 +18,7 @@ public class ZKMonitor extends ZKWatcher implements AsyncCallback.StatCallback {
     private boolean dead;
     private ZKMonitorListener listener;
     private byte prevData[];
+    private boolean enabled = true;
 
     public ZKMonitor(ZooKeeper zk, String znode, ZKWatcher chainedWatcher, ZKMonitorListener listener) {
         this.zk = zk;
@@ -83,8 +84,8 @@ public class ZKMonitor extends ZKWatcher implements AsyncCallback.StatCallback {
             }
         }
 
-        if (((b != null && prevData != null) && (!Arrays.equals(prevData, b)))) {
-            LOG.info("Object does not exist. Call listener");
+        if (enabled && ((b != null && prevData != null) && (!Arrays.equals(prevData, b)))) {
+            LOG.info("Object exist and has changed. Call listener");
             listener.exists(b);
         }
         prevData = b;
@@ -94,4 +95,11 @@ public class ZKMonitor extends ZKWatcher implements AsyncCallback.StatCallback {
         return dead;
     }
 
+    public void enabled() {
+        enabled = true;
+    }
+
+    public void disabled() {
+        enabled = false;
+    }
 }

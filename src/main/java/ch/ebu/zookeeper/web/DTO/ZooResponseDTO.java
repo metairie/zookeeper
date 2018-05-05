@@ -1,4 +1,4 @@
-package ch.ebu.zookeeper.web;
+package ch.ebu.zookeeper.web.DTO;
 
 import lombok.Data;
 
