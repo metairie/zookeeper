@@ -1,6 +1,5 @@
 package ch.ebu.zookeeper.repository;
 
-import ch.ebu.zookeeper.fwk.ZKWatcher;
 import ch.ebu.zookeeper.service.ZookeeperService;
 import org.apache.zookeeper.CreateMode;
 import org.apache.zookeeper.KeeperException;
@@ -21,11 +20,12 @@ public class ZookeeperRepository {
 
     private static final Logger LOG = LoggerFactory.getLogger(ZookeeperRepository.class);
     private ZooKeeper zookeeper;
+    private ZookeeperService zookeeperService;
 
     @Autowired
     public ZookeeperRepository(ZookeeperService zookeeperService) throws IOException, InterruptedException {
-        LOG.info("******************************** constructor");
-        zookeeper = zookeeperService.getZooKeeper();
+        this.zookeeperService = zookeeperService;
+        this.zookeeper = zookeeperService.getZooKeeper();
     }
 
     /**
@@ -37,12 +37,14 @@ public class ZookeeperRepository {
         byte[] b;
         try {
             if (watchFlag) {
-                b = zookeeper.getData(path, new ZKWatcher() {
+                b = zookeeper.getData(path, this.zookeeperService, null);
+                /*                b = zookeeper.getData(path, new ZKWatcher() {
                     @Override
                     public void processResult(int rc, String path, Object ctx, Stat stat) {
-                        LOG.info("******************************** process result ZK repo !");
+// TODO redo watch
                     }
                 }, null);
+*/
             } else {
                 b = zookeeper.getData(path, null, null);
             }

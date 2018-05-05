@@ -1,12 +1,12 @@
 # default config
 
 zookeeper:
-  url: 109.74.206.103:2181
+  url: 109.74.206.103:2182
   root-node: /Node1
   timeout: 10000 #ms
 
 server:
-  port: 8280
+  port: 8282
   servlet.context-path: /zoo
 
 spring:

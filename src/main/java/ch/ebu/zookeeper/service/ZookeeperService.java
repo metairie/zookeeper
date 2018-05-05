@@ -21,6 +21,8 @@ import java.io.IOException;
  * - watch znode changes
  */
 
+// TODO implement reconnection after session timeout
+// TODO add Queue register/uneregister
 @Service
 public class ZookeeperService extends ZKWatcher implements Runnable, ZKMonitorListener {
     private static final Logger LOG = LoggerFactory.getLogger(ZookeeperService.class);
@@ -29,7 +31,6 @@ public class ZookeeperService extends ZKWatcher implements Runnable, ZKMonitorLi
 
     @Autowired
     public ZookeeperService(ZookeeperProperties zookeeperProperties) {
-        LOG.info("--------------------------- constructor");
         this.init(zookeeperProperties);
     }
 
@@ -44,7 +45,6 @@ public class ZookeeperService extends ZKWatcher implements Runnable, ZKMonitorLi
 
     @Override
     public void run() {
-        LOG.info("--------------------------- run");
         try {
             synchronized (this) {
                 while (!zkMonitor.isDead()) {
@@ -58,12 +58,12 @@ public class ZookeeperService extends ZKWatcher implements Runnable, ZKMonitorLi
 
     @Override
     public void exists(byte[] data) {
-        LOG.info("--------------------------- exists");
+        LOG.info("Exists method call");
+        // TODO do actions/tasks here
     }
 
     @Override
     public void closing(int rc) {
-        LOG.info("--------------------------- closing");
         synchronized (this) {
             notifyAll();
         }
@@ -71,15 +71,13 @@ public class ZookeeperService extends ZKWatcher implements Runnable, ZKMonitorLi
 
     @Override
     public void processResult(int rc, String path, Object ctx, Stat stat) {
-        LOG.info("--------------------------- processResult");
-        LOG.info("--------------------------- path = " + path);
-        LOG.info("--------------------------- stats = " + stat);
+        LOG.info("Process Result - trigger");
         zkMonitor.processResult(rc, path, ctx, stat);
     }
 
     @Override
     public void process(WatchedEvent event) {
-        LOG.info("--------------------------- process");
+        LOG.info("Process - trigger");
         zkMonitor.process(event);
     }
 

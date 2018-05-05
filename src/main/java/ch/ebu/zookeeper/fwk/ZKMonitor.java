@@ -29,7 +29,7 @@ public class ZKMonitor extends ZKWatcher implements AsyncCallback.StatCallback {
 
     @Override
     public void process(WatchedEvent event) {
-        LOG.info("*********************** process *********************************");
+        LOG.info("Process method called");
         String path = event.getPath();
         if (event.getType() == Event.EventType.None) {
             switch (event.getState()) {
@@ -55,7 +55,7 @@ public class ZKMonitor extends ZKWatcher implements AsyncCallback.StatCallback {
      **/
     @Override
     public void processResult(int rc, String path, Object ctx, Stat stat) {
-        LOG.info("*********************** processResult ********************************");
+        LOG.info("Process Result - trigger");
         boolean exists;
         switch (rc) {
             case KeeperException.Code.Ok:
@@ -76,7 +76,7 @@ public class ZKMonitor extends ZKWatcher implements AsyncCallback.StatCallback {
         byte b[] = null;
         if (exists) {
             try {
-                LOG.info("*********************** try get data");
+                LOG.info("Try get data from cluster zookeeper");
                 b = zk.getData(znode, false, null);
             } catch (InterruptedException | KeeperException e) {
                 return;
@@ -84,7 +84,7 @@ public class ZKMonitor extends ZKWatcher implements AsyncCallback.StatCallback {
         }
 
         if (((b != null && prevData != null) && (!Arrays.equals(prevData, b)))) {
-            LOG.info("*********************** listener.exists called ");
+            LOG.info("Object does not exist. Call listener");
             listener.exists(b);
         }
         prevData = b;
