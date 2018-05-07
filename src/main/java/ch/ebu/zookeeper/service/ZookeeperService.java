@@ -37,6 +37,8 @@ public class ZookeeperService extends ZKWatcher implements Runnable, ZKMonitorLi
     }
 
     private void init(ZookeeperProperties zookeeperProperties) {
+        LOG.info("Zookeeper build service (ZookeeperService) : " + this.toString());
+
         try {
             zooKeeper = new ZooKeeper(zookeeperProperties.getUrl(), zookeeperProperties.getTimeout(), this);
             zkMonitor = new ZKMonitor(zooKeeper, zookeeperProperties.getRootNode(), null, this);
